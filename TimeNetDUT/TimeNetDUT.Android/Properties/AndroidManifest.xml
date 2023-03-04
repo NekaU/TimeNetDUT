@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="0.0.1" package="com.neka.timenetdut" android:installLocation="auto">
+	<uses-sdk android:minSdkVersion="20" android:targetSdkVersion="33" />
+	<application android:label="TimeNetDUT.Android" android:theme="@style/MainTheme"></application>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+</manifest>
