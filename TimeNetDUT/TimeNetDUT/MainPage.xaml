@@ -1,24 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<!-- Определение страницы и присвоение ей имени -->
+<ContentPage x:Name="MainContentPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TimeNetDUT.MainPage">
+             x:Class="TimeNetDUT.MainPage"
+             BackgroundColor="LightGray"
+             xmlns:converters="clr-namespace:TimeNetDUT.Converters">
 
-    <StackLayout>
-        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
-            <Label Text="Welcome to Xamarin.Forms!" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
-        </Frame>
-        <Label Text="Start developing now" FontSize="Title" Padding="30,10,30,10"/>
-        <Label Text="Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" FontSize="16" Padding="30,0,30,0"/>
-        <Label FontSize="16" Padding="30,24,30,0">
-            <Label.FormattedText>
-                <FormattedString>
-                    <FormattedString.Spans>
-                        <Span Text="Learn more at "/>
-                        <Span Text="https://aka.ms/xamarin-quickstart" FontAttributes="Bold"/>
-                    </FormattedString.Spans>
-                </FormattedString>
-            </Label.FormattedText>
-        </Label>
-    </StackLayout>
+    <!-- Определение ресурсов страницы -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Объявление конвертера, используемого для вычисления ширины кнопок -->
+            <converters:StringLengthConverter x:Key="StringLengthConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
+    <!-- Определение контента страницы -->
+    <ContentPage.Content>
+        <!-- StackLayout - контейнер для кнопок, располагаемых вертикально -->
+        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
+             BackgroundColor="LightGray" Padding="20" Spacing="20">
+            <!-- Кнопка "Студент" -->
+            <Button x:Name="studentBtn" Text="Студент" TextColor="Black"
+            WidthRequest="{Binding Text, Source={x:Reference studentBtn}, 
+            Converter={StaticResource StringLengthConverter}}"
+            BackgroundColor="{Binding BackgroundColor, Source={x:Reference MainContentPage}}"/>
+            <!-- Кнопка "Викладач" -->
+            <Button x:Name="teacherBtn" Text="Викладач" TextColor="Black"
+            WidthRequest="{Binding Text, Source={x:Reference teacherBtn}, 
+            Converter={StaticResource StringLengthConverter}}" 
+            BackgroundColor="{Binding BackgroundColor, Source={x:Reference MainContentPage}}"/>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

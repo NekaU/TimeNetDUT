@@ -12,6 +12,7 @@ namespace TimeNetDUT
     {
         public MainPage()
         {
+            // TODO: Add check first run or not after database creation
             InitializeComponent();
         }
     }
