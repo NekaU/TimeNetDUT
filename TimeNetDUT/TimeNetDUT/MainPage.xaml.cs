@@ -1,10 +1,12 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.IO;
 
 namespace TimeNetDUT
 {
@@ -12,7 +14,17 @@ namespace TimeNetDUT
     {
         public MainPage()
         {
-            // TODO: Add check first run or not after database creation
+            UserConfig user_settings = new AppConfigManager().GetConfig<UserConfig>();
+
+            if (user_settings == null)
+            {
+
+            }
+            else
+            {
+                // TODO: Стартовую страницу, если пользователь зарегестрирован
+            }
+
             InitializeComponent();
         }
     }
