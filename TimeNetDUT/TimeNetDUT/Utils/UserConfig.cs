@@ -19,7 +19,7 @@ namespace TimeNetDUT.Utils
         // Метод сохранения конфигурации пользователя
         public static void SaveConfig(UserConfig config)
         {
-            var configJson = JsonConvert.SerializeObject(config); // Сериализуем конфигурацию в формат JSON
+            string configJson = JsonConvert.SerializeObject(config); // Сериализуем конфигурацию в формат JSON
 
             File.WriteAllText(ConfigFilePath, configJson); // Записываем сериализованную конфигурацию в файл
         }
@@ -33,9 +33,9 @@ namespace TimeNetDUT.Utils
                 return new UserConfig();
             }
 
-            var configJson = File.ReadAllText(ConfigFilePath); // Загружаем сериализованную конфигурацию из файла
+            string configJson = File.ReadAllText(ConfigFilePath); // Загружаем сериализованную конфигурацию из файла
 
-            var config = JsonConvert.DeserializeObject<UserConfig>(configJson); // Десериализуем конфигурацию из формата JSON в экземпляр UserConfig
+            UserConfig config = JsonConvert.DeserializeObject<UserConfig>(configJson); // Десериализуем конфигурацию из формата JSON в экземпляр UserConfig
 
             return config; // Возвращаем загруженную конфигурацию
         }

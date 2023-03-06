@@ -6,6 +6,7 @@ namespace TimeNetDUT.Utils
 {
     internal class AppConfig
     {
+        // TODO: Add default values
         public string BackgroundColor { get; set; } // Цвет фона приложения
 
         public string SecondaryColor { get; set; } // Вторичный цвет приложения
@@ -17,14 +18,14 @@ namespace TimeNetDUT.Utils
         public string TextColor { get; set; } // Цвет текста приложения
     }
 
-    internal class AppConfigManager
+    internal static class AppConfigManager
     {
         private static readonly string ConfigFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "app_config.json"); // Путь к файлу конфигурации приложения
 
         // Метод сохранения конфигурации приложения
         public static void SaveConfig(AppConfig config)
         {
-            var configJson = JsonConvert.SerializeObject(config); // Сериализуем конфигурацию в формат JSON
+            string configJson = JsonConvert.SerializeObject(config); // Сериализуем конфигурацию в формат JSON
 
             File.WriteAllText(ConfigFilePath, configJson); // Записываем сериализованную конфигурацию в файл
         }
@@ -38,9 +39,9 @@ namespace TimeNetDUT.Utils
                 return new AppConfig();
             }
 
-            var configJson = File.ReadAllText(ConfigFilePath); // Загружаем сериализованную конфигурацию из файла
+            string configJson = File.ReadAllText(ConfigFilePath); // Загружаем сериализованную конфигурацию из файла
 
-            var config = JsonConvert.DeserializeObject<AppConfig>(configJson); // Десериализуем конфигурацию из формата JSON в экземпляр AppConfig
+            AppConfig config = JsonConvert.DeserializeObject<AppConfig>(configJson); // Десериализуем конфигурацию из формата JSON в экземпляр AppConfig
             
             return config; // Возвращаем загруженную конфигурацию
         }
