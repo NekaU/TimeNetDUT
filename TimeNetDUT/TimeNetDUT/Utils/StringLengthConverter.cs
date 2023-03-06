@@ -5,7 +5,7 @@ using Xamarin.Forms;
 namespace TimeNetDUT.Utils
 {
     // Объявляем класс StringLengthConverter, который реализует интерфейс IValueConverter
-    public class StringLengthConverter : IValueConverter
+    internal class StringLengthConverter : IValueConverter
     {
         // Реализация метода Convert, который преобразует значение типа string в значение типа double
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
