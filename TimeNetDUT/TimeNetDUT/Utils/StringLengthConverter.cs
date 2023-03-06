@@ -2,7 +2,7 @@
 using Xamarin.Forms;
 
 // Определяем пространство имен, в котором находится класс StringLengthConverter
-namespace TimeNetDUT.Converters
+namespace TimeNetDUT.Utils
 {
     // Объявляем класс StringLengthConverter, который реализует интерфейс IValueConverter
     public class StringLengthConverter : IValueConverter

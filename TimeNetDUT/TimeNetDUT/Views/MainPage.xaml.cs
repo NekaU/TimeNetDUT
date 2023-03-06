@@ -18,7 +18,7 @@ namespace TimeNetDUT
 
             if (user_settings == null)
             {
-
+                // TODO: Окно регистрации
             }
             else
             {
