@@ -5,7 +5,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TimeNetDUT.MainPage"
              BackgroundColor="LightGray"
-             xmlns:converters="clr-namespace:TimeNetDUT.Converters">
+             xmlns:converters="clr-namespace:TimeNetDUT.Utils">
 
     <!-- Определение ресурсов страницы -->
     <ContentPage.Resources>
