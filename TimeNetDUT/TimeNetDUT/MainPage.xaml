@@ -1,0 +1,22 @@
+﻿<ContentPage x:Name="MainContentPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TimeNetDUT"
+             x:Class="TimeNetDUT.MainPage"
+             BackgroundColor="LightGray">
+
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="CenterAndExpand"
+                 HorizontalOptions="CenterAndExpand">
+            <Image Source="logo.png" 
+               HeightRequest="100"
+               WidthRequest="100"
+               VerticalOptions="CenterAndExpand"
+               HorizontalOptions="CenterAndExpand" />
+            <ActivityIndicator IsRunning="True"
+                             VerticalOptions="CenterAndExpand"
+                             HorizontalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>

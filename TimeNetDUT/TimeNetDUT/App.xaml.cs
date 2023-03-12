@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,8 +11,19 @@ namespace TimeNetDUT
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
-            
+            Utils.UserConfig user_settings = Utils.UserConfigManager.LoadConfig(); // Загружаем настройки пользователя из файла конфигурации
+
+            // Проверяем, зарегистрирован ли пользователь, читая файл конфигурации
+            if (user_settings.StudentId == -1)
+            {
+                // Если пользователь не зарегистрирован, отображаем страницу регистрации
+                MainPage = new NavigationPage(new Views.RegistrationPage());
+            }
+            else
+            {
+                // Если пользователь уже зарегистрирован, отображаем главную страницу
+                MainPage = new NavigationPage(new MainPage());
+            }                        
         }
 
         protected override void OnStart()
