@@ -1,22 +1,38 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
+using Xamarin.Forms;
 
 namespace TimeNetDUT.Utils
 {
-    internal class AppConfig
+    public class AppConfig
     {
-        // TODO: Add default values
-        public string BackgroundColor { get; set; } // Цвет фона приложения
+        // Цветовая схема
+        public Color PrimaryColor { get; set; }
+        public Color SecondaryColor { get; set; }
+        public Color BackgroundColor { get; set; }
+        public Color TextColor { get; set; }
 
-        public string SecondaryColor { get; set; } // Вторичный цвет приложения
+        // Размеры шрифтов
+        public double SmallFontSize { get; set; }
+        public double MediumFontSize { get; set; }
+        public double LargeFontSize { get; set; }
 
-        public string TextFont { get; set; } // Шрифт текста приложения
+        // Границы и отступы элементов интерфейса
+        public Thickness PagePadding { get; set; }
+        public Thickness ElementMargin { get; set; }
+        public double ElementSpacing { get; set; }
 
-        public int TextFontSize { get; set; } // Размер шрифта текста приложения
-
-        public string TextColor { get; set; } // Цвет текста приложения
+        // Размеры элементов интерфейса
+        public double ButtonHeight { get; set; }
+        public double ButtonCornerRadius { get; set; }
+        public double EntryHeight { get; set; }
+        public double EntryCornerRadius { get; set; }
+        public double PickerHeight { get; set; }
+        public double SwitchHeight { get; set; }
+        public double SwitchThumbRadius { get; set; }
     }
+
 
     internal static class AppConfigManager
     {

@@ -27,6 +27,12 @@ namespace TimeNetDUT.Views
         StackLayout stackLayout;
         Button acceptBtn;
 
+        /// <summary>
+        /// Конструктор класса RegistrationPage инициализирует компоненты страницы, 
+        /// получает ссылки на кнопки "Студент" и "Преподаватель" с помощью метода 
+        /// FindByName, назначает обработчики событий Clicked для кнопок и 
+        /// назначает обработчик для кнопки "Принять".
+        /// </summary>
         public RegistrationPage()
         {
             InitializeComponent();
@@ -39,6 +45,13 @@ namespace TimeNetDUT.Views
             acceptBtn.Clicked += AcceptBtn_Clicked;
         }
 
+        /// <summary>
+        /// Метод AcceptBtn_Clicked присваивает текущий cookie пользователю и 
+        /// сохраняет его конфигурацию в файл. После этого, он предполагает 
+        /// переход на страницу расписания, но соответствующий код пока не реализован.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AcceptBtn_Clicked(object sender, EventArgs e)
         {
             user.Cookie = cookie;
@@ -46,6 +59,12 @@ namespace TimeNetDUT.Views
             // TODO: Добавить переход на страницу расписания
         }
 
+        /// <summary>
+        /// Метод отвечающий за регистрацию студента.
+        /// Создает на странице picker с выбором факультета, курса и группы.
+        /// </summary>
+        /// <param name="sender">Кнопка "Студент"</param>
+        /// <param name="e">Событие клика</param>
         private async void StudentRegistration(object sender, EventArgs e)
         {
             user.TypeOfUser = UserType.Student;
@@ -126,7 +145,14 @@ namespace TimeNetDUT.Views
             user.TypeOfUser = UserType.Teacher;
         }
 
-
+        /// <summary>
+        /// Обработчик события выбора факультета в пикере.
+        /// Устанавливает выбранный факультет в свойство FacultyId объекта user,
+        /// получает и выводит список курсов для выбранного факультета,
+        /// а также добавляет значок загрузки на страницу.
+        /// </summary>
+        /// <param name="sender">Объект, который вызвал событие (в данном случае - пикер факультетов)</param>
+        /// <param name="e">Аргументы события</param>
         private async void PickerFacultiesChangedIndex(object sender, EventArgs e)
         {
             try
@@ -175,6 +201,12 @@ namespace TimeNetDUT.Views
             }
         }
 
+        /// <summary>
+        /// Обработчик события изменения выбранного элемента в списке курсов.
+        /// Сохраняет выбранный курс и отображает список групп на этом курсе.
+        /// </summary>
+        /// <param name="sender">Источник события.</param>
+        /// <param name="e">Аргументы события.</param>
         private async void PickerCoursesChangedIndex(object sender, EventArgs e)
         {
             try
@@ -233,6 +265,14 @@ namespace TimeNetDUT.Views
             }
         }
 
+        /// <summary>
+        /// Обработчик события при изменении выбранной группы в элементе управления Picker.
+        /// </summary>
+        /// <param name="sender">Отправитель события.</param>
+        /// <param name="e">Аргументы события.</param>
+        /// <remarks>
+        /// Если идентификатор факультета, курса и группы пользователя не равны -1, кнопка acceptBtn становится видимой.
+        /// </remarks>
         private void PickerGroupsChangedIndex(object sender, EventArgs e)
         {
             if (user.FacultyId != -1 && user.Course != -1 && user.GroupId != -1)
