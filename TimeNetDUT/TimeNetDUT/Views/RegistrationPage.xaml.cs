@@ -25,6 +25,7 @@ namespace TimeNetDUT.Views
         Xamarin.Forms.Picker pickerCourse;
         Xamarin.Forms.Picker pickerGroup;
         StackLayout stackLayout;
+        Button acceptBtn;
 
         public RegistrationPage()
         {
@@ -35,11 +36,19 @@ namespace TimeNetDUT.Views
 
             studentBtn.Clicked += StudentRegistration;
             teacherBtn.Clicked += TeacherRegistration;
+            acceptBtn.Clicked += AcceptBtn_Clicked;
         }
 
+        private void AcceptBtn_Clicked(object sender, EventArgs e)
+        {
+            user.Cookie = cookie;
+            UserConfigManager.SaveConfig(user);
+            // TODO: Добавить переход на страницу расписания
+        }
 
         private async void StudentRegistration(object sender, EventArgs e)
         {
+            user.TypeOfUser = UserType.Student;
             page.Content = null;
 
             var header = new Label
@@ -110,12 +119,11 @@ namespace TimeNetDUT.Views
             }
         }
 
-
-
-
         private void TeacherRegistration(object sender, EventArgs e)
         {
+            // TODO: Добавить преподавателя
             page.Content = null;
+            user.TypeOfUser = UserType.Teacher;
         }
 
 
@@ -137,17 +145,7 @@ namespace TimeNetDUT.Views
                     IsRunning = true
                 };
 
-                var stackLayout = new StackLayout
-                {
-                    Children =
-                    {
-                        pickerCourse,
-                        pickerGroup,
-                        activityIndicator
-                    }
-                };
-
-                page.Content = stackLayout;
+                page.Content = new StackLayout { VerticalOptions = LayoutOptions.Center, HorizontalOptions = LayoutOptions.Center, Children = { activityIndicator } };
 
                 List<Option> courses = await GetCoursesAsync();
 
@@ -158,8 +156,18 @@ namespace TimeNetDUT.Views
                 pickerCourse.IsVisible = true;
                 pickerGroup.IsVisible = false;
 
-                // убираем значок загрузки
-                stackLayout.Children.Remove(activityIndicator);
+                var stackLayout = new StackLayout
+                {
+                    Children =
+                    {
+                        picker,
+                        pickerCourse,
+                        pickerGroup
+                    }
+                };
+
+                page.Content = stackLayout;
+
             }
             catch (Exception ex)
             {
@@ -167,9 +175,158 @@ namespace TimeNetDUT.Views
             }
         }
 
-        private void PickerCoursesChangedIndex(object sender, EventArgs e)
+        private async void PickerCoursesChangedIndex(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (pickerCourse.ItemsSource == null || pickerCourse.SelectedIndex < 0)
+                {
+                    return;
+                }
+
+                Option selectedCourse = pickerCourse.SelectedItem as Option;
+                user.Course = Convert.ToInt32(selectedCourse?.Value);
+
+                // добавляем значок загрузки
+                var activityIndicator = new ActivityIndicator
+                {
+                    IsRunning = true
+                };
+
+                page.Content = new StackLayout { VerticalOptions = LayoutOptions.Center, HorizontalOptions = LayoutOptions.Center, Children = { activityIndicator } };
+
+                List<Option> groups = await GetGroupsAsync();
+
+                pickerCourse.ItemsSource = groups;
+                pickerCourse.ItemDisplayBinding = new Binding("Text");
+                pickerCourse.SelectedIndexChanged += PickerGroupsChangedIndex;
+
+                pickerCourse.IsVisible = true;
+                pickerGroup.IsVisible = true;
+
+                acceptBtn = new Button
+                {
+                    Text = "Підтвердити",
+                    TextColor = Color.Black,
+                    WidthRequest = (double)new StringLengthConverter().Convert("Text", typeof(double), studentBtn, null),
+                    BackgroundColor = page.BackgroundColor,
+                    IsVisible = false
+                };
+
+                var stackLayout = new StackLayout
+                {
+                    Children =
+                    {
+                        picker,
+                        pickerCourse,
+                        pickerGroup,
+                        acceptBtn
+                    }
+                };
+
+                page.Content = stackLayout;
+
+            }
+            catch (Exception ex)
+            {
+                // TODO: Обработка остальных исключений
+            }
+        }
+
+        private void PickerGroupsChangedIndex(object sender, EventArgs e)
+        {
+            if (user.FacultyId != -1 && user.Course != -1 && user.GroupId != -1)
+            {
+                acceptBtn.IsVisible = true;   
+            }
+        }
+
+        private async Task<List<Option>> GetGroupsAsync()
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                for (int i = 0; i < 3; i++) // повторяем попытки не более трех раз
+                {
+                    try
+                    {
+                        httpClient.DefaultRequestHeaders.Accept.Clear();
+                        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                        httpClient.DefaultRequestHeaders.Add("Cookie", cookie);
+                        httpClient.DefaultRequestHeaders.Add("Host", "e-rozklad.dut.edu.ua");
+                        httpClient.DefaultRequestHeaders.Add("X-CSRF-Token", cookie);
+
+                        var content = new FormUrlEncodedContent(new[]
+                        {
+                            new KeyValuePair<string, string>("TimeTableForm[facultyId]", user.FacultyId.ToString())
+                        });
+
+                        var responseTask = httpClient.PostAsync("https://e-rozklad.dut.edu.ua/time-table/group", content);
+                        var delayTask = Task.Delay(5000);
+
+                        var completedTask = await Task.WhenAny(responseTask, delayTask);
+
+                        if (completedTask == delayTask)
+                        {
+                            httpClient.CancelPendingRequests();
+                            continue;
+                        }
+
+                        var response = await responseTask;
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+                            {
+                                await Application.Current.MainPage.DisplayAlert("Error", "HttpRequestException: " + "503 Service Unavailable. Try again later, server doesn't respond", "OK");
+                                return null;
+                            }
+                            else if (response.StatusCode == HttpStatusCode.BadRequest)
+                            {
+                                await Application.Current.MainPage.DisplayAlert("Error", "HttpRequestException: " + "400 Bad Request. Update application", "OK");
+                                return null;
+                            }
+                            else
+                            {
+                                await Application.Current.MainPage.DisplayAlert("Error", "HttpRequestException: " + response.StatusCode, "OK");
+                                return null;
+                            }
+                        }
+                        var html = await response.Content.ReadAsStringAsync();
+                        var doc = new HtmlDocument();
+                        doc.LoadHtml(html);
+
+                        var select = doc.GetElementbyId("timetableform-course");
+                        var options = select.Descendants("option")
+                        .Select(o => new Option
+                        {
+                            Value = o.GetAttributeValue("value", ""),
+                            Text = o.InnerText.Trim()
+                        })
+                        .Where(o => !string.IsNullOrEmpty(o.Text) && !string.IsNullOrEmpty(o.Value))
+                        .ToList();
+                        return options;
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Error", "HttpRequestException: " + ex.Message, "OK");
+                    }
+                    catch (TaskCanceledException ex)
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Error", "TaskCanceledException: " + ex.Message, "OK");
+                    }
+                    catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException)
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Error", "Error: " + ex.Message, "OK");
+                    }
+                    catch (Exception ex)
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Error", "Error: " + ex.Message, "OK");
+                    }
+                }
+
+                await Application.Current.MainPage.DisplayAlert("Error", "Failed to get courses after 3 attempts. Server doesn't respond, try again later", "OK");
+
+                return null;
+            }
         }
 
         private class FacultiesAndCookie

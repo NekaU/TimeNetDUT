@@ -6,11 +6,20 @@ namespace TimeNetDUT.Utils
 {
     internal class UserConfig
     {
+        public UserType TypeOfUser { get; set;}
         public int FacultyId { get; set; } = -1;
         public int Course { get; set; } = -1;
         public int GroupId { get; set; } = -1;
         public int StudentId { get; set; } = -1;
+        public string Cookie { get; set; }
     }
+
+    public enum UserType
+    {
+        Student,
+        Teacher
+    }
+
 
     internal static class UserConfigManager
     {
