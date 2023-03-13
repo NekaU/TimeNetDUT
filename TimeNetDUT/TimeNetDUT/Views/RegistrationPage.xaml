@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!-- Определение страницы и присвоение ей имени -->
-<ContentPage x:Name="MainContentPage"
+<ContentPage x:Name="RegistrationContentPage"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TimeNetDUT.MainPage"
+             x:Class="TimeNetDUT.Views.RegistrationPage"
              BackgroundColor="LightGray"
              xmlns:converters="clr-namespace:TimeNetDUT.Utils">
 
@@ -24,12 +24,12 @@
             <Button x:Name="studentBtn" Text="Студент" TextColor="Black"
             WidthRequest="{Binding Text, Source={x:Reference studentBtn}, 
             Converter={StaticResource StringLengthConverter}}"
-            BackgroundColor="{Binding BackgroundColor, Source={x:Reference MainContentPage}}"/>
+            BackgroundColor="{Binding BackgroundColor, Source={x:Reference RegistrationContentPage}}"/>
             <!-- Кнопка "Викладач" -->
             <Button x:Name="teacherBtn" Text="Викладач" TextColor="Black"
             WidthRequest="{Binding Text, Source={x:Reference teacherBtn}, 
             Converter={StaticResource StringLengthConverter}}" 
-            BackgroundColor="{Binding BackgroundColor, Source={x:Reference MainContentPage}}"/>
+            BackgroundColor="{Binding BackgroundColor, Source={x:Reference RegistrationContentPage}}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
