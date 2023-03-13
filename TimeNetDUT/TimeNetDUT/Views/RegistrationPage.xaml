@@ -21,12 +21,12 @@
         <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
              BackgroundColor="LightGray" Padding="20" Spacing="20">
             <!-- Кнопка "Студент" -->
-            <Button x:Name="studentBtn" Text="Студент" TextColor="Black" Clicked="StudentRegistration"
+            <Button x:Name="studentBtn" Text="Студент" TextColor="Black"
             WidthRequest="{Binding Text, Source={x:Reference studentBtn}, 
             Converter={StaticResource StringLengthConverter}}"
             BackgroundColor="{Binding BackgroundColor, Source={x:Reference RegistrationContentPage}}"/>
             <!-- Кнопка "Викладач" -->
-            <Button x:Name="teacherBtn" Text="Викладач" TextColor="Black" Clicked="TeacherRegistration"
+            <Button x:Name="teacherBtn" Text="Викладач" TextColor="Black"
             WidthRequest="{Binding Text, Source={x:Reference teacherBtn}, 
             Converter={StaticResource StringLengthConverter}}" 
             BackgroundColor="{Binding BackgroundColor, Source={x:Reference RegistrationContentPage}}"/>
